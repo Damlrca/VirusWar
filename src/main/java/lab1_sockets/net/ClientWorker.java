@@ -48,7 +48,7 @@ public class ClientWorker {
                 else {
                     System.out.println("unkonwn " + s);
                 }
-                gameFrame.repaint();
+                gameFrame.refresh();
             }
         } catch (IOException e) {
             System.out.println("Server disconnected ???");

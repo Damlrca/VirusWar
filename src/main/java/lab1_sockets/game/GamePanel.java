@@ -5,6 +5,8 @@ import lab1_sockets.net.ClientWorker;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -38,8 +40,14 @@ public class GamePanel extends JPanel {
         buttonArea = new JPanel();
         stateLabel = new JLabel("stateLabel");
         buttonArea.add(stateLabel);
-        resetButton = new JButton("reset (if someone win)");
+        resetButton = new JButton("reset");
         buttonArea.add(resetButton);
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                handleReset();
+            }
+        });
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         buttonArea.setPreferredSize(new Dimension(gameState.SIZE * CELL_SIZE, 35));
@@ -58,8 +66,35 @@ public class GamePanel extends JPanel {
             }
         }
     }
+    public void handleReset() {
+        if (clientWorker != null) {
+            try {
+                clientWorker.tryResetGameState();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
     public void refresh() {
         gameArea.repaint();
+        resetButton.setEnabled(gameState.gameStatus == GameStatus.XWIN ||
+                gameState.gameStatus == GameStatus.OWIN);
+        String stateLabelText = "";
+        switch (gameState.gameStatus) {
+            case WAIT:
+                stateLabelText = "Waiting another player";
+                break;
+            case ONGOING:
+                stateLabelText = "Turn of player " + gameState.turn_player + "(" + gameState.moves_cnt + "/3)";
+                break;
+            case XWIN:
+                stateLabelText = "Player X is winner!";
+                break;
+            case OWIN:
+                stateLabelText = "Player O is winner!";
+                break;
+        }
+        stateLabel.setText(stateLabelText);
     }
     public void drawCells(Graphics g) {
         for (int x = 0; x < gameState.SIZE; x++) {
@@ -87,9 +122,8 @@ public class GamePanel extends JPanel {
                 break;
             }
             case 'X': {
-                g.setColor(Color.RED);
-                g.drawOval(x1, y1, CELL_SIZE - 10, CELL_SIZE - 10);
                 g.setColor(Color.BLUE);
+                g.fillOval(x1, y1, CELL_SIZE - 10, CELL_SIZE - 10);
                 g.drawLine(x1, y1, x2, y2);
                 g.drawLine(x1, y2, x2, y1);
                 break;
@@ -100,11 +134,10 @@ public class GamePanel extends JPanel {
                 break;
             }
             case 'O': {
-                g.setColor(Color.BLUE);
+                g.setColor(Color.RED);
                 g.drawLine(x1, y1, x2, y2);
                 g.drawLine(x1, y2, x2, y1);
-                g.setColor(Color.RED);
-                g.drawOval(x1, y1, CELL_SIZE - 10, CELL_SIZE - 10);
+                g.fillOval(x1, y1, CELL_SIZE - 10, CELL_SIZE - 10);
                 break;
             }
         }
