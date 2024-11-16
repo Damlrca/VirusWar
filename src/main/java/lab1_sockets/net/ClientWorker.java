@@ -51,10 +51,17 @@ public class ClientWorker {
 
     public void receiveGameState() throws IOException {
         String gameTable = dis.readUTF();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < gameState.SIZE * gameState.SIZE; i++) {
             gameState.gameTable[i] = gameTable.charAt(i);
         }
-        System.out.println(gameState.gameTable);
+        for (int i = 0; i < gameState.SIZE * gameState.SIZE; i++) {
+            System.out.print(gameState.gameTable[i]);
+            if ((i + 1) % gameState.SIZE == 0) {
+                System.out.println();
+            }
+        }
+        //System.out.println(gameState.gameTable);
+
         gameState.gameStatus = GameStatus.valueOf(dis.readUTF());
         gameState.turn_player = dis.readChar();
         gameState.moves_cnt = dis.readInt();
