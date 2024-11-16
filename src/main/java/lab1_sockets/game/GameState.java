@@ -5,7 +5,7 @@ import lab1_sockets.net.ServerWorker;
 import java.util.ArrayList;
 
 public class GameState {
-    public final int SIZE = 10;
+    public final int TABLE_SIZE = 10;
     public int playerXid = -1, playerOid = -1;
     public char[] gameTable;
     public GameStatus gameStatus;
@@ -14,7 +14,7 @@ public class GameState {
     private final ArrayList<ServerWorker> serverWorkers = new ArrayList<>();
 
     public int xy_to_indx(int x, int y) {
-        return x * SIZE + y;
+        return x * TABLE_SIZE + y;
     }
 
     public GameState() throws Exception {
@@ -22,8 +22,8 @@ public class GameState {
     }
 
     private void reset() throws Exception {
-        gameTable = new char[SIZE * SIZE];
-        for (int i = 0; i < SIZE * SIZE; i++) {
+        gameTable = new char[TABLE_SIZE * TABLE_SIZE];
+        for (int i = 0; i < TABLE_SIZE * TABLE_SIZE; i++) {
             gameTable[i] = '.';
         }
         if (playerOid == -1 || playerXid == -1) {
@@ -83,7 +83,7 @@ public class GameState {
         for (int k = 0; k < 8; k++) {
             int I = i + dx[k];
             int J = j + dy[k];
-            if (0 <= I && I < SIZE && 0 <= J && J < SIZE) {
+            if (0 <= I && I < TABLE_SIZE && 0 <= J && J < TABLE_SIZE) {
                 if (gameTable[xy_to_indx(i, j)] == 'x') {
                     if (gameTable[xy_to_indx(I, J)] != 'O') {
                         dfsX(res, I, J);
@@ -99,14 +99,14 @@ public class GameState {
         }
     }
     private boolean[][] calcMovableX() {
-        boolean[][] res = new boolean[SIZE][SIZE];
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        boolean[][] res = new boolean[TABLE_SIZE][TABLE_SIZE];
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            for (int j = 0; j < TABLE_SIZE; j++) {
                 res[i][j] = false;
             }
         }
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            for (int j = 0; j < TABLE_SIZE; j++) {
                 if (gameTable[xy_to_indx(i, j)] == 'x') {
                     dfsX(res, i, j);
                 }
@@ -115,8 +115,8 @@ public class GameState {
         if (gameTable[xy_to_indx(0, 0)] == '.') {
             res[0][0] = true;
         }
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            for (int j = 0; j < TABLE_SIZE; j++) {
                 res[i][j] = res[i][j] && (gameTable[xy_to_indx(i, j)] == '.' ||
                         gameTable[xy_to_indx(i, j)] == 'o');
             }
@@ -130,7 +130,7 @@ public class GameState {
         for (int k = 0; k < 8; k++) {
             int I = i + dx[k];
             int J = j + dy[k];
-            if (0 <= I && I < SIZE && 0 <= J && J < SIZE) {
+            if (0 <= I && I < TABLE_SIZE && 0 <= J && J < TABLE_SIZE) {
                 if (gameTable[xy_to_indx(i, j)] == 'o') {
                     if (gameTable[xy_to_indx(I, J)] != 'X') {
                         dfsO(res, I, J);
@@ -146,24 +146,24 @@ public class GameState {
         }
     }
     private boolean[][] calcMovableO() {
-        boolean[][] res = new boolean[SIZE][SIZE];
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        boolean[][] res = new boolean[TABLE_SIZE][TABLE_SIZE];
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            for (int j = 0; j < TABLE_SIZE; j++) {
                 res[i][j] = false;
             }
         }
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            for (int j = 0; j < TABLE_SIZE; j++) {
                 if (gameTable[xy_to_indx(i, j)] == 'o') {
                     dfsO(res, i, j);
                 }
             }
         }
-        if (gameTable[xy_to_indx(SIZE - 1, SIZE - 1)] == '.') {
-            res[SIZE - 1][SIZE - 1] = true;
+        if (gameTable[xy_to_indx(TABLE_SIZE - 1, TABLE_SIZE - 1)] == '.') {
+            res[TABLE_SIZE - 1][TABLE_SIZE - 1] = true;
         }
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            for (int j = 0; j < TABLE_SIZE; j++) {
                 res[i][j] = res[i][j] && (gameTable[xy_to_indx(i, j)] == '.' ||
                         gameTable[xy_to_indx(i, j)] == 'x');
             }
@@ -224,8 +224,8 @@ public class GameState {
             movable = calcMovableO();
         }
         int cnt = 0;
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            for (int j = 0; j < TABLE_SIZE; j++) {
                 if (movable[i][j]) {
                     cnt++;
                 }

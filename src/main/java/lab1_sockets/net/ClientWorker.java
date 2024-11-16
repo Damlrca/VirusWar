@@ -4,7 +4,6 @@ import lab1_sockets.game.GameFrame;
 import lab1_sockets.game.GameState;
 import lab1_sockets.game.GameStatus;
 
-import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,16 +14,16 @@ public class ClientWorker {
     private final Socket socket;
     private final DataInputStream dis;
     private final DataOutputStream dos;
-    private final GameFrame gameFrame;
+    private final GameFrame myFrame;
     private final char player_char;
-    ClientWorker(GameState gameState, Socket socket, DataInputStream dis, DataOutputStream dos, char player_char, GameFrame gameFrame) {
+    ClientWorker(GameState gameState, Socket socket, DataInputStream dis, DataOutputStream dos, char player_char, GameFrame myFrame) {
         this.gameState = gameState;
         this.socket = socket;
         this.dis = dis;
         this.dos = dos;
         this.player_char = player_char;
-        this.gameFrame = gameFrame;
-        gameFrame.gamePanel.clientWorker = this;
+        this.myFrame = myFrame;
+        myFrame.gamePanel.clientWorker = this;
 
         Thread clientWorkerThread = new Thread(() -> {
             try {
@@ -48,7 +47,7 @@ public class ClientWorker {
                 else {
                     System.out.println("unkonwn " + s);
                 }
-                gameFrame.refresh();
+                myFrame.update();
             }
         } catch (IOException e) {
             System.out.println("Server disconnected ???");
@@ -57,17 +56,16 @@ public class ClientWorker {
 
     public void receiveGameState() throws IOException {
         String gameTable = dis.readUTF();
-        for (int i = 0; i < gameState.SIZE * gameState.SIZE; i++) {
+        for (int i = 0; i < gameState.TABLE_SIZE * gameState.TABLE_SIZE; i++) {
             gameState.gameTable[i] = gameTable.charAt(i);
         }
-        for (int i = 0; i < gameState.SIZE * gameState.SIZE; i++) {
+        /*for (int i = 0; i < gameState.TABLE_SIZE * gameState.TABLE_SIZE; i++) {
             System.out.print(gameState.gameTable[i]);
-            if ((i + 1) % gameState.SIZE == 0) {
+            if ((i + 1) % gameState.TABLE_SIZE == 0) {
                 System.out.println();
             }
-        }
-        //System.out.println(gameState.gameTable);
-
+        }*/
+        System.out.println(gameState.gameTable);
         gameState.gameStatus = GameStatus.valueOf(dis.readUTF());
         gameState.turn_player = dis.readChar();
         gameState.moves_cnt = dis.readInt();
