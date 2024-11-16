@@ -5,7 +5,7 @@ import lab1_sockets.net.ServerWorker;
 import java.util.ArrayList;
 
 public class GameState {
-    public final int SIZE = 5;
+    public final int SIZE = 10;
     public int playerXid = -1, playerOid = -1;
     public char[] gameTable;
     public GameStatus gameStatus;
@@ -13,7 +13,7 @@ public class GameState {
     public int moves_cnt;
     private final ArrayList<ServerWorker> serverWorkers = new ArrayList<>();
 
-    private int xy_to_indx(int x, int y) {
+    public int xy_to_indx(int x, int y) {
         return x * SIZE + y;
     }
 

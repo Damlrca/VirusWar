@@ -1,8 +1,10 @@
 package lab1_sockets.net;
 
+import lab1_sockets.game.GameFrame;
 import lab1_sockets.game.GameState;
 import lab1_sockets.game.GameStatus;
 
+import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,13 +15,16 @@ public class ClientWorker {
     private final Socket socket;
     private final DataInputStream dis;
     private final DataOutputStream dos;
+    private final GameFrame gameFrame;
     private final char player_char;
-    ClientWorker(GameState gameState, Socket socket, DataInputStream dis, DataOutputStream dos, char player_char) {
+    ClientWorker(GameState gameState, Socket socket, DataInputStream dis, DataOutputStream dos, char player_char, GameFrame gameFrame) {
         this.gameState = gameState;
         this.socket = socket;
         this.dis = dis;
         this.dos = dos;
         this.player_char = player_char;
+        this.gameFrame = gameFrame;
+        gameFrame.gamePanel.clientWorker = this;
 
         Thread clientWorkerThread = new Thread(() -> {
             try {
@@ -43,6 +48,7 @@ public class ClientWorker {
                 else {
                     System.out.println("unkonwn " + s);
                 }
+                gameFrame.repaint();
             }
         } catch (IOException e) {
             System.out.println("Server disconnected ???");

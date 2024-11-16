@@ -1,7 +1,9 @@
 package lab1_sockets.net;
 
+import lab1_sockets.game.GameFrame;
 import lab1_sockets.game.GameState;
 
+import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -25,18 +27,18 @@ public class Client {
 
         char player_char = dis.readChar();
 
-        ClientWorker clientWorker = new ClientWorker(gameState, socket, dis, dos, player_char);
-
         if (player_char == 'x' || player_char == 'o') {
             System.out.println("Connected to server");
             System.out.println("Player " + player_char);
+            GameFrame gameFrame = new GameFrame(gameState, player_char);
+            ClientWorker clientWorker = new ClientWorker(gameState, socket, dis, dos, player_char, gameFrame);
             dos.writeUTF("getGameState");
-            while (true) {
-                Scanner scanner = new Scanner(System.in);
-                int x = scanner.nextInt();
-                int y = scanner.nextInt();
-                clientWorker.tryMakeMove(x, y);
-            }
+//            while (true) {
+//                Scanner scanner = new Scanner(System.in);
+//                int x = scanner.nextInt();
+//                int y = scanner.nextInt();
+//                clientWorker.tryMakeMove(x, y);
+//            }
         }
         else {
             System.out.println("Two players already connected");
