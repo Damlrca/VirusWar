@@ -5,7 +5,6 @@ import lab2_soap.net.GameStateService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 
 public class GamePanel extends JPanel {
     private static final int RECT_SIZE = 45;

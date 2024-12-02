@@ -3,8 +3,6 @@ package lab2_soap.net;
 import lab2_soap.game.GameState;
 
 import javax.xml.ws.Endpoint;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class Server {
     public static final int port = 8080;
@@ -14,7 +12,7 @@ public class Server {
         String url = String.format("http://localhost:%d/%s", port, name);
         GameState gameState = new GameState();
         Endpoint.publish(url, gameState);
-        System.out.println("Сервер работает: " + url);
+        System.out.println("server started: " + url);
     }
 
     public static void main(String[] args) throws Exception {
